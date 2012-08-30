@@ -1,0 +1,11 @@
+
+body.game {
+	margin: 0;
+	padding: 0;
+}
+
+.game CANVAS, .game DIV {
+	position: absolute;
+}
+
+canvas {}

@@ -1,0 +1,85 @@
+body {
+    background-color: #222222;
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+iframe {
+	margin: 2px;
+	border: 0 solid #000;
+}
+
+DIV {
+	margin: 2px auto;
+	padding: 4px;
+}
+#list {
+	background-color: #666;
+}
+
+A, A:link, A:active, A:visited {
+	color: #f90;
+	font-weight: bold;
+}
+A:hover {
+	background-color: #999;
+}
+
+
+@import url("http://fast.fonts.com/t/1.css?apiType=css&projectid=b7bb98c2-e492-419b-8a30-eee475b57fb1");
+@font-face{
+	font-family:"AvantGardeGothicITCW01B 731069";
+	src:url("fonts/AvantGarde/2a334c60-3e0d-4f43-b0e9-5284ea33961a.eot?iefix") format("eot");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01B 731069";
+	src:url("fonts/AvantGarde/2a334c60-3e0d-4f43-b0e9-5284ea33961a.eot?iefix");
+	src:url("fonts/AvantGarde/c68f0543-0caf-4988-b234-355520476b8c.woff") format("woff"),
+	url("fonts/AvantGarde/2d4f1d98-ddb3-4acc-ae78-c8b1863f780e.ttf") format("truetype"),
+	url("fonts/AvantGarde/80f98a03-905d-49e6-8614-cec7c32ca4f2.svg#80f98a03-905d-49e6-8614-cec7c32ca4f2") format("svg");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01B 731072";
+	src:url("fonts/AvantGarde/AvantGarde/d6c308a1-6908-40bc-b732-0fec02d083ac.eot?iefix") format("eot");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01B 731072";
+	src:url("fonts/AvantGarde/d6c308a1-6908-40bc-b732-0fec02d083ac.eot?iefix");
+	src:url("fonts/AvantGarde/7571e8e6-97a2-48aa-97c1-b8aeeefc5409.woff") format("woff"),
+	url("fonts/AvantGarde/8f1e17ad-3b38-4d51-83f5-4e5469174a77.ttf") format("truetype"),
+	url("fonts/AvantGarde/1ee7d1fd-0f7c-4d70-b970-f4dc602eab62.svg#1ee7d1fd-0f7c-4d70-b970-f4dc602eab62") format("svg");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01D 731075";
+	src:url("fonts/AvantGarde/b74e5f86-4477-435a-abdf-32d8215f21bc.eot?iefix") format("eot");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01D 731075";
+	src:url("fonts/AvantGarde/b74e5f86-4477-435a-abdf-32d8215f21bc.eot?iefix");
+	src:url("fonts/AvantGarde/c18aee57-7585-4a8b-9a1c-69d226301d73.woff") format("woff"),
+	url("fonts/AvantGarde/44ccbb2b-0fbc-4d95-b1da-0aa73bd26fb0.ttf") format("truetype"),
+	url("fonts/AvantGarde/f2de529c-11d2-43b7-be7c-05c5aaeaf133.svg#f2de529c-11d2-43b7-be7c-05c5aaeaf133") format("svg");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01D 731078";
+	src:url("fonts/AvantGarde/11458aa4-54c5-4577-b6c7-03209f393c77.eot?iefix") format("eot");
+}
+@font-face{
+	font-family:"AvantGardeGothicITCW01D 731078";
+	src:url("fonts/AvantGarde/11458aa4-54c5-4577-b6c7-03209f393c77.eot?iefix");
+	src:url("fonts/AvantGarde/4e9994cb-061f-4678-850d-527f1d636f44.woff") format("woff"),
+	url("fonts/AvantGarde/cb81a665-3c91-4f41-a739-dbf62a943154.ttf") format("truetype"),
+	url("fonts/AvantGarde/a662b8b1-1550-4c01-9eec-437f22cab36e.svg#a662b8b1-1550-4c01-9eec-437f22cab36e") format("svg");
+}
+.FontNormal			{	font-family: "AvantGardeGothicITCW01B 731069"; }
+.FontItalic {	font-family: "AvantGardeGothicITCW01B 731072"; }
+.FontDemi {	font-family: "AvantGardeGothicITCW01D 731075";  }
+.FontDemiItalic {	font-family: "AvantGardeGothicITCW01D 731078"; }

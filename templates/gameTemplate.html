@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Atari Arcade: Game Viewer</title>
+
+		<script>
+			// Legacy CreateJS code.
+			var createjs = window;
+		</script>
+		<script src="{BASE_URL}scripts/min/jquery-1.7.2.min.js"></script>
+		<script src="{BASE_URL}scripts/min/json2.min.js"></script>
+
+		<!-- CreateJS libs -->
+		<script src="{BASE_URL}scripts/min/preloadjs-0.2.0.min.js"></script>
+		<script src="{BASE_URL}scripts/min/easeljs-0.5.0.min.js"></script>
+		<script src="{BASE_URL}scripts/min/tweenjs-0.3.0.min.js"></script>
+		<script src="{BASE_URL}scripts/min/soundjs-0.3.0.min.js"></script>
+		<script src="{BASE_URL}scripts/min/soundjs.flashplugin-0.3.0.min.js"></script>
+
+		<!-- Framework libs -->
+		<script src="{BASE_URL}scripts/libs/atari/Atari.js"></script>
+		<script src="{BASE_URL}scripts/libs/atari/Fonts.js"></script>
+		<script src="{BASE_URL}scripts/libs/atari/GameBootstrap.js"></script>
+		<script src="{BASE_URL}scripts/libs/atari/HighScores.js"></script>
+		<script src="{BASE_URL}scripts/libs/atari/GameMediator.js"></script>
+
+		<!-- Library libs -->
+		<script src="{BASE_URL}scripts/libs/gamelibs/GameLibs.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/Point2.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/Math2.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/TexturePackerUtils.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/StringUtils.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/FPSMeter.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/SpriteSheetWrapper.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/GameUI.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/ScoreManager.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/GameDetails.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/ParticleEmitter.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/PerformanceMonitor.js"></script>
+
+		<!-- Multi-player -->
+		<script src="{BASE_URL}scripts/libs/gamelibs/multiplayer/Player.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/multiplayer/FramePacket.js"></script>
+        <script src="{BASE_URL}scripts/libs/gamelibs/multiplayer/GamePacket.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/multiplayer/MultiPlayerGame.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/multiplayer/GameInfo.js"></script>
+
+		<!-- Input -->
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/GamePad.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/TouchBar.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/Joystick.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/TouchBar.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/ArcadeButton.js"></script>
+		<script src="{BASE_URL}scripts/libs/gamelibs/input/Throttle.js"></script>
+
+		<!-- Other -->
+		<script src="{BASE_URL}scripts/libs/gskinner/ProximityManager.js"></script>
+		<script src="{BASE_URL}scripts/libs/gskinner/Rnd.js"></script>
+
+		<script>
+			function init(){
+				window.BASE_PATH = "{BASE_URL}";
+				Atari.GameBootstrap.initialize();
+				setTimeout(startGame, 250);
+			}
+
+			function startGame(gameId) {
+				Atari.GameBootstrap.startGame("{GAME_ID}", "{BASE_URL}", document.getElementById("gameCanvas"));
+			}
+
+			//The main window has passed in keyboard, mouse, or touch input.
+			function handleRelayedInput(type, event, data) {
+				if (window.Atari == null) { return; }
+				if (Atari.gameMediator == null) { return; }
+				Atari.gameMediator.handleRelayedInput(type, event, data);
+			}
+
+		</script>
+		<style>
+			body {
+				-webkit-touch-callout: none;
+				-webkit-user-select: none;
+				-khtml-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+		</style>
+		<link rel="stylesheet" href="{BASE_URL}testharness/css/game.css" />
+	</head>
+
+	<body class="game" onload="init()">
+		<div id="background"></div>
+		<canvas id="gameCanvas" ></canvas>
+	</body>
+</html>

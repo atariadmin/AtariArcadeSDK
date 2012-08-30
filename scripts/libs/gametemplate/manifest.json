@@ -1,0 +1,24 @@
+{
+	"splash":   "img/splash.jpg",
+	"width":    800,
+	"height":   600,
+
+	"id": "game",
+	"name": "Game",
+	"gameClass": "Game.js",
+
+	"modes": [
+		"normal",
+		"expert"
+	],
+
+	"dependencies": [
+		"src/Game.js"
+	],
+
+	"assets":   [
+		{"id":"assetId", "src":"data/data.json"},
+		{"id":"audio", "src":"audio/background.mp3", "data":3}
+		"img/background.jpg",
+	]
+}

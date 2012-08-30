@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Atari Arcade Test Harness v1.0</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+
+	<meta name="msapplication-TileImage" content="images/arcadeIcon-144.png"/>
+    <meta name="msapplication-TileColor" content="#000000"/>
+
+	<!-- Libraries -->
+	<script type="text/javascript" src="../scripts/min/jquery-1.7.2.min.js"></script>
+
+	<!--<script>var AtariSite = {};</script>-->
+
+	<script type="text/javascript" src="../scripts/min/preloadjs-0.2.0.min.js"></script>
+	<script type="text/javascript" src="../scripts/min/soundjs-0.3.0.min.js"></script>
+	<!--<script src="http://arcadeservice.atari.com:50000/socket.io/socket.io.js"></script>-->
+	<script type="text/javascript" src="../scripts/min/socket.io.js"></script>
+
+	<!-- Include Atari Classes Here. Ultimately it will be a minified lib -->
+	<script type="text/javascript" src="../scripts/libs/atari/Atari.js"></script>
+	<!--<script type="text/javascript" src="BrowserDetect.js"></script>-->
+	<script type="text/javascript" src="../scripts/libs/atari/GameShell.js"></script>
+	<script type="text/javascript" src="../scripts/libs/atari/GameMediator.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/GameLibs.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/StringUtils.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/GameDetails.js"></script>
+
+	<!-- Multiplayer Classes -->
+	<script type="text/javascript" src="../scripts/libs/gamelibs/multiplayer/Player.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/multiplayer/GameInfo.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/multiplayer/MultiPlayerGame.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/multiplayer/FramePacket.js"></script>
+	<script type="text/javascript" src="../scripts/libs/gamelibs/multiplayer/GamePacket.js"></script>
+
+	<!-- Placeholder replaces the in-progress Site -->
+	<script type="text/javascript" src="../scripts/SiteShim.js"></script>
+
+	<script type="text/javascript">
+
+		function init() {
+			$("#controls").css("display", "none");
+		}
+
+		function startGame(gameId, mp) {
+			quickPlay(gameId, "../");
+			$("#controls").css("display", "block");
+			return false;
+		}
+
+		function command(name, args) {
+			Atari.trace(Atari.GameShell.mediator.command(name, args));
+			return false;
+		}
+
+		function toggleMute() {
+			Atari.GameShell.setMute(!Atari.GameShell.muted);
+		}
+
+		function toggleAudio(noAudio) {
+			Atari.GameShell.audioDisabled = noAudio;
+		}
+
+	</script>
+
+
+	<link rel="stylesheet" href="css/tempStyles.css" />
+	<style>
+		#list A {
+			padding: 0 10px;
+			font-size: 20px;
+			font-weight: bold;
+		}
+		#progress {
+			font-family: Arial;
+		    font-size: 14px;
+		}
+	</style>
+</head>
+
+<body onload="init()">
+
+	<div id="list">
+		<!-- YOUR GAME HERE -->
+		<a href="#" onclick="startGame('{YOUR_GAME_ID}')">{YOUR GAME NAME}</a>
+
+		<input type="checkbox" id="noAudio" name="noAudio" value="noValue" onclick="toggleAudio(this.checked)" /><label for="noAudio">No Audio</label>
+		<input type="checkbox" id="forceTouch" name="forceTouch" value="noValue" /><label for="forceTouch">Touch</label>
+	</div>
+
+	<div id="controls" style="z-index: 5000000;">
+		<a href="#" onclick="command(Atari.GameMediator.PAUSE_GAME, {paused:true})">Pause</a>
+		<a href="#" onclick="command(Atari.GameMediator.PAUSE_GAME, {paused:false})">Resume</a>
+		<a href="#" onclick="toggleMute()">Toggle Mute</a>
+	</div>
+
+	<div id="progress" style="position: absolute; z-index: 6000000; background-color: #000000">
+	</div>
+
+</body>
+</html>

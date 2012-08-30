@@ -1,0 +1,25 @@
+{
+	"myGame": {
+		"id": "mygame",
+		"name": "MyGame",
+		"base": "games/MyGame/",
+		"bgImage": "arcadeArt/background.jpg",
+		"instructions": [
+			{
+				"touch": {
+						"image": "arcadeArt/control-shoot-touch.jpg",
+						"icon": "icon-control-press",
+						"description": "Tap the 'shoot' button to shoot."
+				},
+				"desktop": {
+						"image": "arcadeArt/control-shoot-desktop.jpg",
+						"icon": "icon-control-spacebar",
+						"description": "Press the 'spacebar' to shoot."
+				}
+			},
+
+			
+		],
+		"copyright":"MyGame &reg; &copy; 2012 Your company, inc."
+	},
+}
