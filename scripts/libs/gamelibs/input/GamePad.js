@@ -47,7 +47,7 @@
 	s.players = [];
 
 	/**
-	 * Represents an upwards movement, which can also be an UP ARROW or W key
+	 * Represents an upwards movement, which can also be an UP ARROW, W key or Z key
 	 * @property DOWN
 	 * @type {String}
 	 * @default up
@@ -65,7 +65,7 @@
 	s.DOWN = "down";
 
 	/**
-	 * Represents a left movement, which can also be a LEFT ARROW or A key
+	 * Represents a left movement, which can also be a LEFT ARROW, A key or Q key
 	 * @property UP
 	 * @type {String}
 	 * @default left
@@ -239,12 +239,14 @@
 		 */
 		initialize: function() {
 			this.downButtons = {};
-			// Default keyMappings: ARROWS, WASD, SPACE, ENTER, SHIFT, CTRL.
+			// Default keyMappings: ARROWS, WASD, ZQSD, SPACE, ENTER, SHIFT, CTRL.
 			var keyMap = {};
 			keyMap[KeyCodes.W] = GamePad.UP;
 			keyMap[KeyCodes.A] = GamePad.LEFT;
 			keyMap[KeyCodes.S] = GamePad.DOWN;
 			keyMap[KeyCodes.D] = GamePad.RIGHT;
+			keyMap[KeyCodes.Z] = GamePad.UP;
+			keyMap[KeyCodes.Q] = GamePad.LEFT;
 			keyMap[KeyCodes.UP] = GamePad.UP;
 			keyMap[KeyCodes.LEFT] = GamePad.LEFT;
 			keyMap[KeyCodes.DOWN] = GamePad.DOWN;
@@ -552,6 +554,8 @@
 	KeyCodes.A = 65; //Left
 	KeyCodes.S = 83; //Down
 	KeyCodes.D = 68; //Right
+	KeyCodes.Z = 90; //Up
+	KeyCodes.Q = 81; //Left
 
 	scope.GamePad = GamePad;
 
