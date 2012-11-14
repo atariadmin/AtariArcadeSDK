@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -434,7 +434,7 @@
 		 */
 		setButtonDown: function(code) {
 			if (this.downButtons[code] != true) {
-				if (this.onButtonDown && !Ticker.isPaused) { this.onButtonDown(code); }
+				if (this.onButtonDown && !createjs.Ticker.isPaused) { this.onButtonDown(code); }
 			}
 			this.downButtons[code] = true;
 		},

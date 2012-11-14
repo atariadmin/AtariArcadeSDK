@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -145,11 +145,10 @@
 			var isConnected = (s.socket != null);
 			if(!isConnected){
 				try {
-					s.socket = io.connect(s.SOCKET_URL);
+					s.socket = io.connect(s.SOCKET_URL, {"force new connection": true});
 				} catch(e){
 					Atari.trace("ERROR: Unable to connect to multiplayer server.");
 					if (this.onConnectionError) { this.onConnectionError(e); }
-
 					return;
 				}
 			} else {
@@ -191,6 +190,7 @@
 		},
 
 		cleanupSocket: function() {
+			if (!s.socket) { return; }
 			s.socket.removeAllListeners("connect");
 			s.socket.removeAllListeners("startCountDown");
 			s.socket.removeAllListeners("gameReady");
@@ -203,6 +203,7 @@
 			s.socket.removeAllListeners("broadcast");
 			s.socket.removeAllListeners("sync");
 			s.socket.removeAllListeners("error");
+			s.socket = null;
 		},
 
 
@@ -219,7 +220,7 @@
 			//[SB] If no currentPlayer is defined, we'll inject one.
 			// This is primarily a debugging hook so that the development site will work without a logged in user, should not be needed in production code.
 			if(!player){
-				var id = "Guest" + (Math.random() * 10000 |0);
+				var id = "Guest" + (Math.random() * 10000 | 0);
 				var player = new GameLibs.Player(id, id);
 				player.isMe = true;
 				this.gameInfo.players = [player];
@@ -227,7 +228,7 @@
 			//Ask server to setup a game, it will create a room if one is needed, or add us to an existing room if possible.
 			s.socket.emit("join", {
 				gameType: this.gameInfo.gameId,
-				roomName: this.gameInfo.roomName,
+				roomName: this.gameInfo.roomName, //Atari.developerMode ? "A84" : this.gameInfo.roomName,
 				userId:player.id,
 				nickname:player.name,
 				picture:player.getAvatar()
@@ -300,8 +301,11 @@
 		},
 
 		destroy: function() {
+			if (!s.socket) { return; }
 			Atari.trace("[MultiplayerGame] Destroy");
 			s.socket.emit("leave");
+			s.socket.emit("disconnect");
+			this.cleanupSocket();
 		},
 
 /*************************************************
@@ -399,13 +403,14 @@
 		 */
 		handlePlayerLeave: function(data) {
 			for(var i = 0, l = this.gameInfo.players.length; i < l; i++){
-				if(this.gameInfo.players[i].id == data.nickname){
+				if(this.gameInfo.players[i].id == data.userId){
 					this.gameInfo.players.splice(i, 1);
 					Atari.trace("[MultiplayerGame] PlayerLeave: Player '"+data.nickname+"' Exited Room");
 					break;
 				}
 			}
-			if (this.onPlayersChanged) { this.onPlayersChanged(this.gameInfo.players); }
+			if (this.onPlayerLeave) { this.onPlayerLeave(data.userId); }
+			
 		},
 
 		/**
@@ -416,7 +421,7 @@
 		 */
 		handleGameCanceled: function() {
 			if (this.onGameCanceled) { this.onGameCanceled(); }
-			s.socket.emit("leave");
+			if(s.socket){ s.socket.emit("leave"); }
 			Atari.trace("[MultiplayerGame] Game Canceled - Leaving Room");
 		},
 

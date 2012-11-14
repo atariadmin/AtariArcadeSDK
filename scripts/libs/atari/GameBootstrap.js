@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -109,10 +109,10 @@
 	 */
 	s.initialize = function() {
 		// Selectively set the plugins
-		/*createjs.FlashPlugin.BASE_PATH = window.BASE_PATH + "scripts/soundjs/";
-		if (AtariSite.BrowserDetect.isSafari()) {
+		createjs.FlashPlugin.BASE_PATH = window.BASE_PATH + "scripts/soundjs/";
+		if (createjs.PreloadJS.BrowserDetect.isIOS) {
 			createjs.SoundJS.registerPlugin(createjs.FlashPlugin);
-		}*/
+		}
 	}
 
 	/**
@@ -143,8 +143,9 @@
 
 		var manifest = s.manifest = this.owner.currentGameManifest;
 		s.canvas = canvas;
-		canvas.width = manifest.width;
-		canvas.height = manifest.height;
+		// LM: DEPRECATED FOR NOW
+		//canvas.width = manifest.width;
+		//canvas.height = manifest.height;
 
 		// Append base to each path
 		var assets = [];

@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -17,9 +17,10 @@
 	/**
 	 * The GameInfo class provides information about the current single or multiplayer game.
 	 * @class MultiPlayer
+	 * @constructor
 	 */
-	function GameInfo(gameId, mode, roomName, players, multiplayer, gameModes) {
-        this.initialize(gameId, mode, roomName, players, multiplayer, gameModes);
+	function GameInfo(gameId, mode, roomName, players, multiplayer, gameModes, platform, width, height) {
+        this.initialize(gameId, mode, roomName, players, multiplayer, gameModes, platform, width, height);
     }
 	var s = GameInfo;
 
@@ -41,6 +42,20 @@
 	 */
 	s.MULTI_PLAYER = "multiPlayer";
 
+
+
+	// Platform ENUMs
+	s.PLATFORM_DESKTOP = "desktop";
+	s.PLATFORM_WP7 = "wp7";
+	s.PLATFORM_WP8 = "wp8"; // Might be fine to use WP
+	s.PLATFORM_IPHONE = "iPhone";
+	s.PLATFORM_IPHONE3 = "iPhone3";
+	s.PLATFORM_IPHONE_PINNED = "iPhonePinned";
+	s.PLATFORM_IPHONE3_PINNED = "iPhone3Pinned";
+
+	s.QUALITY_NORMAL = 0;
+	s.QUALITY_HIGH = 1;
+	s.QUALITY_LOW = 2;
 
 	var p = GameInfo.prototype = {
 
@@ -111,8 +126,56 @@
 		 */
 		selectedGameMode: 0,
 
+		/**
+		 * The width of the game in pixels. This is set by the game shell.
+		 * @property width
+		 * @type Number
+		 * @default 1024
+		 */
+		width: 1024,
 
-		initialize: function(gameId, mode, roomName, players, multiPlayerGame, gameModes) {
+		/**
+		 * The height of the game in pixels. This is set by the game shell.
+		 * @property height
+		 * @type Number
+		 * @default 622
+		 */
+		height: 622,
+
+		/**
+		 * The amount the viewport is scaled to accommodated different pixel densities on devices. For example,
+		 * the iPhone 4+ needs to be scaled to 0.5 to run properly.
+		 * @property scaleFactor
+		 * @type Number
+		 * @default 1
+		 */
+		scaleFactor: 1,
+
+		/**
+		 * The platform the game is running on. This is detected by the game framework, and injected.
+		 * @property platform
+		 * @type Number
+		 * @default null
+		 */
+		platform: null,
+
+		/**
+		 * The game quality is determined by the rough resolution and platform, which provides an
+		 * idea on how much to scale assets in a game to be reasonable.
+		 * <ul>
+		 *     <li>Normal (0): This is the default, and what is shown on the desktop (1024x622)</li>
+		 *     <li>High (1): A device with high resolution, it is recommended to draw assets a little larger (1.5x or so).
+		 *      Devices with high resolution include the iPhone 4+, and Windows Phone 8 devices with 720p resolution.
+		 *     <li>Low (2): A device with low resolution, it is recommended to draw assets a little smaller (0.75x).
+		 *      Devices with low resolution include Windows Phone 7 & 8 (WVGA), and iPhone 3GS and lower.
+		 * </ul>
+		 * @property quality
+		 * @type Number
+		 * @default QUALITY_NORMAL (0)
+		 */
+		quality: s.QUALITY_NORMAL,
+
+		initialize: function(gameId, mode, roomName, players, multiPlayerGame, gameModes, platform, width, height) {
 			this.gameId = gameId;
 			this.mode = mode || s.SINGLE_PLAYER;
 			this.roomName = roomName;
@@ -122,6 +185,62 @@
 				this.maxPlayers = multiPlayerGame.maxPlayers;
 			}
 			this.gameModes = gameModes;
+
+			// Set the size if it was passed in.
+			if (width != null) { this.width = width; }
+			if (height != null) { this.height = height; }
+
+			//TODO: Platform will have to be determined by the system.
+			this.platform = platform;
+			switch (platform) {
+				case s.PLATFORM_DESKTOP:
+					this.width = 1024;
+					this.height = 622;
+					break;
+
+				case s.PLATFORM_WP7:
+					this.width = 800;
+					this.height = 410;
+					this.scaleFactor = 0.6;
+					this.quality = s.QUALITY_LOW;
+					break;
+
+				case s.PLATFORM_WP8:
+					//TODO: Might have WVGA resolution as well, which is low-res
+					this.width = 1280;
+					this.height = 700;
+					this.scaleFactor = 0.6;
+					this.quality = s.QUALITY_HIGH;
+					break;
+
+				/* Mobile with browser chrome
+				case s.PLATFORM_IPHONE:
+					this.width = 960;
+					this.height = 396;
+					this.scaleFactor = 0.5;
+					this.quality = s.QUALITY_HIGH;
+					break;
+
+				case s.PLATFORM_IPHONE3:
+					this.width = 480;
+					this.height = 196;
+					this.quality = s.QUALITY_LOW;
+					break;
+				case s.PLATFORM_IPHONE3_PINNED:
+					this.width = 480;
+					this.height = 320;
+					this.quality = s.QUALITY_LOW;
+					break;
+				*/
+
+				case s.PLATFORM_IPHONE:
+					this.width = 960;
+					this.height = 640;
+					this.scaleFactor = 0.5;
+					this.quality = s.QUALITY_HIGH;
+					break;
+
+			}
 		},
 
 		/**

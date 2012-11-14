@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -22,6 +22,29 @@
 	var s = GameUI;
 
 	s.background = null;
+	s.STRETCH = "stretch";
+	s.SCALE = "scale";
+	s.CROP = "crop";
+
+	//Align
+	s.CENTER = "C";
+	//Specifies that the CLIP is aligned at the center.
+	s.CENTER_TOP = "CT";
+	//Specifies that the CLIP is aligned at center-top.
+	s.CENTER_LEFT = "CL";
+	//Specifies that the CLIP is aligned at center-left corner.
+	s.CENTER_RIGHT = "CR";
+	//Specifies that the CLIP is aligned at center-right corner.
+	s.BOTTOM = "B";
+	//Specifies that the CLIP is aligned at the bottom.
+	s.BOTTOM_LEFT = "BL";
+	//Specifies that the CLIP is aligned in the bottom-left corner.
+	s.BOTTOM_RIGHT = "BR";
+	//Specifies that the CLIP is aligned in the bottom-right corner.
+	s.TOP_LEFT = "TL";
+	//Specifies that the CLIP is aligned in the top-left corner.
+	s.TOP_RIGHT = "TR";
+	//Specifies that the CLIP is aligned in the top-right corner.
 
 	/**
 	 * Initializes the UI. This is called by the GameBootstrap before the game is instantiated.
@@ -45,8 +68,19 @@
 	 * is no transition.
 	 * @method changeBackground
 	 * @param {HTMLImageElement|String} src The path or Image element to use as a background.
+	 * @param {Number} width The width of the viewport.
+	 * @param {Number} height The height of the viewport.
+	 * @param {String} fit The mode to fit the image into the viewport.
+	 * <ul>
+	 *     <li>stretch (default): Match the width and height of the viewport. This will augement the image
+	 *          if the ratios do not match.</li>
+	 *     <li>scale: Scale the image to fit in the viewport. Additional space may be visible on the outer
+	 *          edge of the image.</li>
+	 *     <li>crop: Scale the image to fill the viewport. Parts of the image will be cropped out.</li>
+	 * </ul>
+	 * @param {String} align The mode to align the image if it does not fit perfectly.
 	 */
-	s.changeBackground = function(src) {
+	s.changeBackgroundOld = function(src) {
 		var path = src;
 		if (src == null) { return; }
 		if (typeof(src) == "string") {
@@ -56,9 +90,81 @@
 		}
 		s.background.style.backgroundImage = "url('"+path+"')";
 	}
+	s.changeBackground = function(src, width, height, fit, align) {
+		var bmp = new createjs.Bitmap(src);
+
+		var w = bmp.image.width;
+		var h = bmp.image.height;
+		var scale = 1;
+		// For now just stretch
+		if (fit == "stretch") {
+			bmp.scaleX = width/w;
+			bmp.scaleY = height/h;
+		} else if (fit == "scale") {
+			var ir = width/height;
+			var r = w/h;
+			if (ir < r) {
+				bmp.scaleX = bmp.scaleY = width/w;
+				//bmp.y = ?
+			} else {
+				bmp.scaleX = bmp.scaleY = height/h;
+				//bmp.x = ?
+			}
+		} else if (fit == "crop") {
+			var ir = width/height;
+			var r = w/h;
+			if (ir > r) {
+				bmp.scaleX = bmp.scaleY = width/w;
+
+			} else {
+				bmp.scaleX = bmp.scaleY = height/h;
+			}
+			scale = bmp.scaleX;
+		}
+		//Alignment types.
+		switch(align) {
+			case s.BOTTOM:
+				bmp.x = width - (w*scale)>>1;
+				bmp.y = height - h;
+				break;
+			case s.BOTTOM_LEFT:
+				bmp.x = 0;
+				bmp.y = height - h;
+				break;
+			case s.BOTTOM_RIGHT:
+				bmp.x = width - w*scale;
+				bmp.y = height - h;
+				break;
+			case s.CENTER_TOP:
+				bmp.x =  width - (w*scale) >> 1;
+				bmp.y = 0;
+				break;
+			case s.CENTER_LEFT:
+				bmp.x = 0;
+				bmp.y = height - (h*scale)>>1;
+				break;
+			case s.CENTER_RIGHT:
+				bmp.x = width - w*scale;
+				bmp.y = height - (h*scale)>>1;
+				break;
+			case s.CENTER:
+				bmp.x = width - (w*scale) >> 1;
+				bmp.y = height - (h*scale) >> 1;
+				break;
+			case s.TOP_LEFT:
+				bmp.x = 0;
+				bmp.y = 0;
+				break;
+			case s.TOP_RIGHT:
+				bmp.x =  width - w*scale;
+				bmp.y = 0;
+				break;
+		}
+		return bmp;
+	}
 
 	s.blur = function(stage) {
-		var bg = new Container();
+		var bg = new createjs.Container();
 		var div = document.getElementById("background");
 
 		this.drawChild(div, bg);
@@ -74,7 +180,7 @@
 		stage.addChildAt(bg, 0);
 		stage.update();
 
-		var bbf = new BoxBlurFilter(10,10, 1);
+		var bbf = new createjs.BoxBlurFilter(10,10, 1);
 		bbf.applyFilter(stage.canvas.getContext('2d'), 0,0,this.width,this.height);
 		stage.removeChild(bg);
 	}
@@ -95,8 +201,8 @@
 				var top = match ? match[1] : 0;
 			}
 		}
-		var bmp = new Bitmap(url);
-		bmp.sourceRect = new Rectangle(-left,-top,this.width,this.height);
+		var bmp = new createjs.Bitmap(url);
+		bmp.sourceRect = new createjs.Rectangle(-left,-top,this.width,this.height);
 		container.addChild(bmp);
 	}
 
@@ -106,7 +212,7 @@
 	 * @method startDrag
 	 */
 	s.startDrag = function() {
-		Atari.gameMediator.handleGameEvent(Atari.GameMediator.START_DRAG);
+		//Atari.gameMediator.handleGameEvent(Atari.GameMediator.START_DRAG);
 	}
 
 	/**
@@ -115,7 +221,7 @@
 	 * @method stopDrag
 	 */
 	s.stopDrag = function() {
-		Atari.gameMediator.handleGameEvent(Atari.GameMediator.STOP_DRAG);
+		//Atari.gameMediator.handleGameEvent(Atari.GameMediator.STOP_DRAG);
 	}
 
 	scope.GameUI = GameUI;

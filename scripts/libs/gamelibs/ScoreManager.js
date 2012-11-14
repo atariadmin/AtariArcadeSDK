@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -33,6 +33,7 @@
 		 * The current score.
 		 * @property score
 		 * @type Number
+		 * @default 0
 		 */
 		score: 0,
 
@@ -40,6 +41,7 @@
 		 * The score currently displayed.
 		 * @property displayScore
 		 * @type Number
+		 * @default 0
 		 * @protected
 		 */
 		displayScore: 0,

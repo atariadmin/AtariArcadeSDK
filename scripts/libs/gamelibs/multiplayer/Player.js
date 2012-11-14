@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -38,7 +38,7 @@
 		"http://graph.facebook.com/grant.skinner/picture?type=square",
 		"http://graph.facebook.com/bhendel1/picture?type=square"
 	];
-	s.DEFAULT_AVATAR = "http://images.sodahead.com/profiles/002085491/silhouette_man_square.gif";
+	s.DEFAULT_AVATAR = "/sites/all/themes/atari_arcade/static/images/avatar-computer.jpg";
 
 	var p = Player.prototype = {
 
@@ -111,8 +111,8 @@
 		getAvatar: function() {
 			if (this.avatar != null && this.avatar != "") {
 				return this.avatar;
-			} else if (Atari.developerMode) {
-				return s.DEVELOPER_AVATARS[Math.random() * s.DEVELOPER_AVATARS.length | 0];
+			//} else if (Atari.developerMode) {
+			//	return s.DEVELOPER_AVATARS[Math.random() * s.DEVELOPER_AVATARS.length | 0];
 			} else {
 				return s.DEFAULT_AVATAR;
 			}

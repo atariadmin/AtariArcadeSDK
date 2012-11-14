@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -123,41 +123,41 @@
 			if (params.mininumDistance != null) { this.minimumDistance = params.minimumDistance; }
 
 			this.isVertical = (direction == s.VERTICAL);
-			this.dragProps = new Point();
+			this.dragProps = new createjs.Point();
 
 			// Images
-			if (images != null && images instanceof SpriteSheet) {
+			if (images != null && images instanceof createjs.SpriteSheet) {
 				this.spritesheet = images;
 				var suffix = params.suffix || "";
 				var names = this.spritesheet.getAnimations();
 				if (names.indexOf("pad"+suffix) > -1) {
-					this.pad = new BitmapAnimation(this.spritesheet);
+					this.pad = new createjs.BitmapAnimation(this.spritesheet);
 					this.pad.gotoAndStop("pad"+suffix);
 				}
 				if (names.indexOf("thumb"+suffix) > -1) {
-					this.thumb = new BitmapAnimation(this.spritesheet);
+					this.thumb = new createjs.BitmapAnimation(this.spritesheet);
 					this.thumb.gotoAndStop("thumb"+suffix);
 				}
 			} else if (images != null) {
 				var img = images.pad;
 				if (img) {
-					this.pad = new Bitmap(img.src);
+					this.pad = new createjs.Bitmap(img.src);
 					this.pad.regX = img.regX;
 					this.pad.regY = img.regY;
 				}
 				img = images.thumb;
 				if (img) {
-					this.thumb = new Bitmap(img.src);
+					this.thumb = new createjs.Bitmap(img.src);
 					this.thumb.regX = img.regX;
 					this.thumb.regY = img.regY;
 				}
 			}
 
-			this.sprite = new Container();
+			this.sprite = new createjs.Container();
 			var hs = this.sprite;
 			if (this.autoHide) {
 				var hs = new createjs.Shape();
-				var ha = this.hitArea = new Shape(new Graphics().f("#000000").dr(hitArea.x, hitArea.y, hitArea.width, hitArea.height));
+				var ha = this.hitArea = new createjs.Shape(new createjs.Graphics().f("#000000").dr(hitArea.x, hitArea.y, hitArea.width, hitArea.height));
 				hs.hitArea = ha;
 				this.sprite.addChild(hs);
 			}
@@ -166,7 +166,7 @@
 		},
 
 		draw: function() {
-			var throttle = this.throttle = new Container();
+			var throttle = this.throttle = new createjs.Container();
 			if (this.autoHide) {
 				throttle.visible = false;
 				throttle.alpha = 0.5; //TODO: Make this a param.
@@ -174,14 +174,14 @@
 
 			var pad = this.pad;
 			if (pad == null) {
-				var pad = new Shape(new Graphics().f("#666").dr(-50,-50,100,100).f("#000").dr(-10,-45, 20, 90));
+				var pad = new createjs.Shape(new createjs.Graphics().f("#666").dr(-50,-50,100,100).f("#000").dr(-10,-45, 20, 90));
 				if (!this.isVertical) { pad.rotation = 90; }
 			}
 			throttle.addChild(pad);
 
 			var thumb = this.thumb;
 			if (thumb == null) {
-				var thumb = this.thumb = new Shape(new Graphics().f("#f00").dc(0,0,30));
+				var thumb = this.thumb = new createjs.Shape(new createjs.Graphics().f("#f00").dc(0,0,30));
 			}
 			throttle.addChild(thumb);
 
@@ -254,7 +254,7 @@
 				this.sprite.visible = false;
 				this.thumb.x = this.thumb.y = 0;
 			} else {
-				Tween.get(this.thumb).to({x:0, y:0}, 300, Ease.bounceOut);
+				createjs.Tween.get(this.thumb).to({x:0, y:0}, 300, createjs.Ease.bounceOut);
 			}
 
 			var pad = GameLibs.GamePad;

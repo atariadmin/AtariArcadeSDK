@@ -16,9 +16,9 @@
 		"src/Game.js"
 	],
 
-	"assets":   [
+	"assets": [
 		{"id":"assetId", "src":"data/data.json"},
-		{"id":"audio", "src":"audio/background.mp3", "data":3}
-		"img/background.jpg",
+		{"id":"audio", "src":"audio/background.mp3", "data":3},
+		"img/background.jpg"
 	]
 }

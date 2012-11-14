@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -51,6 +51,7 @@
 	s.RESTART_GAME = "restartGame";
 	s.DESTROY_GAME = "destroyGame";
 	s.REDUCE_FRAMERATE = "reduceFrameRate";
+	s.REMOVE_PLAYER = "removePlayer";
 
 	/**
 	 * Defines the constant for a notify-level error, which can usually be ignored.
@@ -243,6 +244,11 @@
 			}
 		},
 
+		toggleVisibility: function(visible) {
+			// Consider throttling Tick...
+			GameLibs.GamePad.reset();
+		},
+
 		/**
 		 * Register the game instance with the GameMediator. This ensures that all the game has all the
 		 * required methods and event handlers defined, and adds handlers for events. Note that the
@@ -305,16 +311,20 @@
 			this.shell = shell;
 			this.multiPlayerGame = mpg;
 
+			// Scale the canvas to fit the GameInfo.
+			var canvas = this.stage.canvas;
+			var gameInfo = this.shell.gameInfo;
+
+			// Set the Canvas size
+			canvas.width = gameInfo.width;
+			canvas.height = gameInfo.height;
+
+			// On hi-resolution platforms, we need to counter-scale.
+			canvas.style.width = gameInfo.width * gameInfo.scaleFactor + "px";
+			canvas.style.height = gameInfo.height * gameInfo.scaleFactor + "px";
+
 			// Initialize the game itself.
-			if (true || Atari.developerMode) {
-				this.gameInstance.initialize(this.currentAssets, this.stage, this.shell.gameInfo);
-			} else {
-				try {
-					this.gameInstance.initialize(this.currentAssets, this.stage, this.shell.gameInfo);
-				} catch (error) {
-					this.showError(error, "Unable to initialize game.");
-				}
-			}
+			this.gameInstance.initialize(this.currentAssets, this.stage, gameInfo);
 		},
 
 		/**
@@ -322,6 +332,8 @@
 		 * @method startGame
 		 */
 		startGame: function() {
+			var gameInfo = this.shell.gameInfo;
+
 			var fps = this.shell.currentGameManifest.fps;
 			if (fps == null || isNaN(fps)) { fps = 30; }
 			createjs.Ticker.setFPS(fps);
@@ -329,10 +341,12 @@
 			this.targetFPS = fps;
 			this.targetMS = 1000 / fps;
 
-			//Ticker.useRAF = true;
+			if (gameInfo.platform != GameLibs.GameInfo.PLATFORM_IPHONE) {
+				createjs.Ticker.useRAF = true;
+			}
 			createjs.Ticker.addListener(this, false);
 
-			Atari.trace("[GameMediator] Staring game. Total players: " + this.shell.gameInfo.players.length);
+			Atari.trace("[GameMediator] Staring game. Total players: " + gameInfo.players.length);
 			this.gameInstance.startGame();
 
 		},
@@ -356,6 +370,9 @@
 		 * @param {String} message A verbose message for the logs.
 		 */
 		logError: function(error, message) {
+			if(Atari.developerMode){
+				throw(error);
+			}
 			Atari.trace(error);
 		},
 
@@ -582,6 +599,12 @@
 							// TODO: Handle error
 							this.logError(error);
 						}
+					}
+					break;
+
+				case s.REMOVE_PLAYER:
+					if(game.removePlayer){
+						game.removePlayer(args);
 					}
 					break;
 

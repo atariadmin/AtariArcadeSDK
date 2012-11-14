@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -178,10 +178,10 @@
 	 * @static
 	 */
 	s.lineToBox = function(p1, p2, rect, checkIntersect) {
-		var lowerLeft = new Point(rect.x, rect.y+rect.height);
-		var upperRight = new Point(rect.x+rect.width, rect.y);
-		var upperLeft = new Point( rect.x, rect.y );
-		var lowerRight= new Point( rect.x+rect.width, rect.y+rect.height);
+		var lowerLeft = new createjs.Point(rect.x, rect.y+rect.height);
+		var upperRight = new createjs.Point(rect.x+rect.width, rect.y);
+		var upperLeft = new createjs.Point( rect.x, rect.y );
+		var lowerRight= new createjs.Point( rect.x+rect.width, rect.y+rect.height);
 
 		// check if it is inside
 		if (p1.x > lowerLeft.x && p1.x < upperRight.x && p1.y < lowerLeft.y && p1.y > upperRight.y &&
@@ -309,8 +309,34 @@
 		return true;
 	}
 
+	/**
+	 * Determine if a number is inside of a range.
+	 * @param {Number} value The value to check.
+	 * @param {Number} low The low end of the range
+	 * @param {Number} high The high end of the range
+	 * @return {Boolean}
+	 */
 	s.isBetween = function (value, low, high) {
 		return value >= low && value <= high;
+	}
+
+	/**
+	 * Interpolate between two numbers. This helps find a point between two numbers. For example:
+	 * <ul><li>Interpolating between 10 and 20 with 0.5 would result in 15.</li>
+	 *      <li>Interpolating between 10 and 20 with 0.25 would result in 12.5.</li>
+	 *      <li>Interpolating between 10 and 20 with 2 would result in 30.</li>
+	 *      <li>Interpolating between 10 and 20 with -0.5 would result in 5.</li>
+	 * </ul>
+	 * @param {Number} val1 The first number. It can be higher or lower than the second.
+	 * @param {Number} val2 The second number.
+	 * @param {Number} amount A percentage between the two numbers. The default is 0.5.
+	 *      A lower number will fall closer to the second value. You can optionally pass
+	 *      a number greater than one or less than zero to find values outside of the range.
+	 * @return {Number} The derived value between the two points.
+	 */
+	s.interpolate = function(val1, val2, amount) {
+		if (amount == null) { amount = 0.5; }
+		return (val2 - val1) * amount + val1;
 	}
 
 	scope.Math2 = Math2;

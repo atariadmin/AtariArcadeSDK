@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -166,7 +166,7 @@
 				}
 				img = images.thumb;
 				if (img) {
-					this.thumb = new Bitmap(img.src);
+					this.thumb = new createjs.Bitmap(img.src);
 					this.thumb.regX = img.regX;
 					this.thumb.regY = img.regY;
 				}
@@ -193,7 +193,7 @@
 		},
 
 		draw: function() {
-			var joystick = this.joystick = new Container();
+			var joystick = this.joystick = new createjs.Container();
 
 			if (this.autoHide || this.autoMove) {
 				joystick.alpha = 0.5;
@@ -205,7 +205,7 @@
 			// Draw images
 			var pad = this.pad;
 			if (pad == null) {
-				var pad = new Shape();
+				var pad = new createjs.Shape();
 				var r = this.radius;
 				pad.graphics.f("#666").drawRoundRect(-r,-r,r*2,r*2,10).ef();
 				pad.graphics.f("#333").dc(0,0,15);
@@ -218,14 +218,14 @@
 			}
 
 			if (this.showStick) {
-				this.stick = new Shape();
+				this.stick = new createjs.Shape();
 				joystick.addChild(this.stick);
 			}
 
 			var thumb = this.thumb;
 			if (thumb == null) {
-				this.thumb = new Shape(
-					new Graphics().f("f00").dc(0,0,30).ef()
+				this.thumb = new createjs.Shape(
+					new createjs.Graphics().f("f00").dc(0,0,30).ef()
 				);
 			}
 			joystick.addChild(this.thumb);
@@ -363,14 +363,16 @@
 			if (this.autoHide) { this.joystick.visible = false; }
 			this.setState(0,0);
 			this.currentDistance *= 0.5; // Reduce elastic
-			Tween.get(this).to({currentDistance:0}, 500, Ease.getElasticOut(1,0.1)).call(this.handleTweenComplete, null, this);
+			createjs.Tween.get(this)
+					.to({currentDistance:0}, 500, createjs.Ease.getElasticOut(1,0.1))
+					.call(this.handleTweenComplete, null, this);
 			createjs.Ticker.addListener(this);
 
 			GameLibs.GameUI.stopDrag();
 		},
 
 		handleTweenComplete: function() {
-			Ticker.removeListener(this);
+			createjs.Ticker.removeListener(this);
 		},
 
 		tick: function() {

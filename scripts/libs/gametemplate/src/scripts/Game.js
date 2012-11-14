@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* ©Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -92,6 +92,16 @@
 		 * @method restart
 		 */
 		restart: function() {
+
+		},
+
+		/**
+		 * The game has instructed the game to either reduce the experience due to bad FPS, or resume the high=
+		 * quality experience as framerate has returned to normal.
+		 * @method reduceFrameRate
+		 * @param {Boolean} reduce If the game should reduce the experience (true), or resume it (false).
+		 */
+		reduceFrameRate: function(reduce) {
 
 		},
 
@@ -236,12 +246,10 @@
 		},
 
 		/**
-		 * The game has instructed the game to either reduce the experience due to bad FPS, or resume the high=
-		 * quality experience as framerate has returned to normal.
-		 * @method reduceFrameRate
-		 * @param {Boolean} reduce If the game should reduce the experience (true), or resume it (false).
+		 * A player has been disconnected from the current multiplayer game.
+		 * @method playerDisconnected
 		 */
-		reduceFrameRate: function(reduce) {
+		removePlayer: function(playerId) {
 
 		}
 

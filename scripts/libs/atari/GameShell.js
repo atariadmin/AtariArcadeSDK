@@ -3,7 +3,7 @@
 * Developed by gskinner.com in partnership with Atari
 * Visit http://atari.com/arcade/developers for documentation, updates and examples.
 *
-* Copyright Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
+* Copyright (c) Atari Interactive, Inc. All Rights Reserved. Atari and the Atari logo are trademarks owned by Atari Interactive, Inc.
 *
 * Distributed under the terms of the MIT license.
 * http://www.opensource.org/licenses/mit-license.html
@@ -58,9 +58,8 @@
 	 * The template path that will be loaded into an iframe, which bootstraps the game.
 	 * @property templatePath
 	 * @type {String}
-	 * @default templates/gameTemplate.html
 	 */
-	s.templatePath = "templates/gameTemplate.html";
+	s.templatePath = null;
 
 	s.gameId = null;
 	s.baseUrl = null;
@@ -93,6 +92,8 @@
 	 */
 	s.onGameEvent = null;
 
+	s.defaultManifest = null;
+
 	/**
 	 * The game is currently preloading.
 	 * @event onGameProgress
@@ -119,8 +120,12 @@
 		};
 		s.baseUrl = baseUrl || "";
 
-		// Load the core manifest
-		s.loadFile([baseUrl + "games/GameManifest.json?no="+new Date().getTime()], s.handleGameList);
+		if (s.manifest == null) {
+			// Load the core manifest
+			s.loadFile([baseUrl + "games/GameManifest.json?no="+new Date().getTime()], s.handleGameList);
+		} else {
+			s.onManifestLoaded && s.onManifestLoaded(s.manifest);
+		}
 	}
 
 	/**
@@ -149,6 +154,15 @@
                 //s.window.GameLibs.GamePad.onExternalEvent(event);
             }
         }
+	}
+
+	/**
+	 * The site has been toggled. Usually when a tab changes. The site is responsible for this.
+	 * @method toggleVisibility
+	 * @param {Boolean} visible If the site is visible or not
+	 */
+	s.toggleVisibility = function(visible) {
+		s.mediator.toggleVisibility(visible);
 	}
 
 	/**
@@ -217,9 +231,6 @@
 		var manifest = this.currentGameManifest = Atari.parseJSON(event.result);
 		manifest.base = s.manifest[s.gameId].base;
 
-		//TODO: Preload the start screen assets....
-		var assets = manifest.startScreen;
-
 		if (s.onGameSetup) {
 			s.onGameSetup(manifest);
 		}
@@ -227,21 +238,16 @@
 
 	/**
 	 * Create a game instance. This creates the container IFRAME, and initiates the
-	 * template injection. A game <b>Room</b> is created for multiplayer games, and returned
-	 * to the site, which contains the appropriate callbacks to monitor the room for a
-	 * ready state.
+	 * template injection.
 	 * @method createGame
 	 * @param {DOMElement} Where on the document should the the iFrame should be placed.
 	 * @static
 	 */
 	s.createGame = function(parent) {
-		//s.gameInfo = gameInfo;
-		var manifest = this.currentGameManifest;
-
 		var frame = s.frame = document.createElement("iframe");
 		frame.id = "gameFrame";
-		frame.width = manifest.width;
-		frame.height = manifest.height;
+		frame.width = 1024;
+		frame.height = 622;
 		frame.scrolling = "no";
 		frame.ALLOWTRANSPARENCY = true;
 
@@ -359,6 +365,9 @@
 	 * @param {MultiPlayerGame} mpg The current multiplayer game.
 	 */
 	s.initializeGame = function(gameInfo, mpg) {
+		s.frame.width = gameInfo.width * gameInfo.scaleFactor;
+		s.frame.height = gameInfo.height * gameInfo.scaleFactor;
+
 		s.gameInfo = gameInfo;
 		s.multiPlayerGame = mpg;
 		s.mediator.initializeGame(s, mpg);
@@ -383,6 +392,15 @@
 	s.destroyGame = function() {
 		s.mediator.command(Atari.GameMediator.DESTROY_GAME);
 		//s.window.postMessage({command:Atari.GameMediator.START_GAME});
+	}
+
+	/**
+	 * A player has been disconnected from multiplayer, remove them from the game.
+	 * @method removePlayer
+	 * @static
+	 */
+	s.removePlayer = function(playerId) {
+		s.mediator.command(Atari.GameMediator.REMOVE_PLAYER, playerId);
 	}
 
 
