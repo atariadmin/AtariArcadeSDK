@@ -3,25 +3,46 @@
 	<head>
 		<title>Atari Arcade: Game Viewer</title>
 
+		<!-- META no-index tags? -->
+
 		<script>
-			// Legacy CreateJS code.
+			// Required to allow non-namespaced createjs classes.
 			var createjs = window;
+			var AtariSite = {};
 		</script>
-		<script src="{BASE_URL}scripts/min/jquery-1.7.2.min.js"></script>
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script src="{BASE_URL}scripts/BrowserDetect.js"></script>
 		<script src="{BASE_URL}scripts/min/json2.min.js"></script>
 
 		<!-- CreateJS libs -->
+		<!--
 		<script src="{BASE_URL}scripts/min/preloadjs-0.2.0.min.js"></script>
 		<script src="{BASE_URL}scripts/min/easeljs-0.5.0.min.js"></script>
 		<script src="{BASE_URL}scripts/min/tweenjs-0.3.0.min.js"></script>
-		<script src="{BASE_URL}scripts/min/soundjs-0.3.0.min.js"></script>
-		<script src="{BASE_URL}scripts/min/soundjs.flashplugin-0.3.0.min.js"></script>
+		-->
+		<script src="http://code.createjs.com/easeljs-0.5.0.min.js"></script>
+		<script src="http://code.createjs.com/tweenjs-0.3.0.min.js"></script>
+		<script src="http://code.createjs.com/preloadjs-0.2.0.min.js"></script>
+
+		<script src="{BASE_URL}scripts/min/soundjs-NEXT.min.js"></script>
+		<script src="{BASE_URL}scripts/min/soundjs.flashplugin-NEXT.min.js"></script>
+
+		<!-- Easel Filters -->
+		<script src="{BASE_URL}scripts/easeljs/filters/ColorMatrix.js"></script>
+		<script src="{BASE_URL}scripts/easeljs/filters/ColorMatrixFilter.js"></script>
+		<script src="{BASE_URL}scripts/easeljs/filters/BoxBlurFilter.js"></script>
+
+		<!-- PreloadJS classes
+		<script src="{BASE_URL}scripts/preloadjs/AbstractLoader.js"></script>
+		<script src="{BASE_URL}scripts/preloadjs/PreloadJS.js"></script>
+		<script src="{BASE_URL}scripts/preloadjs/XHRLoader.js"></script>
+		<script src="{BASE_URL}scripts/preloadjs/TagLoader.js"></script>-->
 
 		<!-- Framework libs -->
 		<script src="{BASE_URL}scripts/libs/atari/Atari.js"></script>
 		<script src="{BASE_URL}scripts/libs/atari/Fonts.js"></script>
 		<script src="{BASE_URL}scripts/libs/atari/GameBootstrap.js"></script>
-		<script src="{BASE_URL}scripts/libs/atari/HighScores.js"></script>
 		<script src="{BASE_URL}scripts/libs/atari/GameMediator.js"></script>
 
 		<!-- Library libs -->
@@ -49,7 +70,6 @@
 		<script src="{BASE_URL}scripts/libs/gamelibs/input/GamePad.js"></script>
 		<script src="{BASE_URL}scripts/libs/gamelibs/input/TouchBar.js"></script>
 		<script src="{BASE_URL}scripts/libs/gamelibs/input/Joystick.js"></script>
-		<script src="{BASE_URL}scripts/libs/gamelibs/input/TouchBar.js"></script>
 		<script src="{BASE_URL}scripts/libs/gamelibs/input/ArcadeButton.js"></script>
 		<script src="{BASE_URL}scripts/libs/gamelibs/input/Throttle.js"></script>
 
@@ -58,17 +78,41 @@
 		<script src="{BASE_URL}scripts/libs/gskinner/Rnd.js"></script>
 
 		<script>
+            var startGameTimeout = null;
+
 			function init(){
 				window.BASE_PATH = "{BASE_URL}";
 				Atari.GameBootstrap.initialize();
-				setTimeout(startGame, 250);
+
+				var mtiTracking=document.createElement('link');
+				mtiTracking.type='text/css';
+				mtiTracking.rel='stylesheet';
+				mtiTracking.href=('https:'==document.location.protocol?'https:':'http:')+'//fast.fonts.com/t/1.css?apiType=css&projectid=b7bb98c2-e492-419b-8a30-eee475b57fb1';
+				(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild( mtiTracking );
+
+                window.onunload = handleWindowUnload;
+
+                startGameTimeout = setTimeout(startGame, 250);
 			}
+
+            function handleWindowUnload() {
+               //Get rid off all the cache canvases
+               createjs.DisplayObject._hitTestCanvas = null;
+               createjs.Graphics._ctx = null;
+               createjs.SpriteSheetUtils._workingCanvas = null;
+               createjs.Text._workingContext = null;
+               clearTimeout(startGameTimeout);
+               window.Atari = null;
+               window.onunload = null;
+            }
 
 			function startGame(gameId) {
 				Atari.GameBootstrap.startGame("{GAME_ID}", "{BASE_URL}", document.getElementById("gameCanvas"));
 			}
 
-			//The main window has passed in keyboard, mouse, or touch input.
+			/**
+			 * The main window has passed in keyboard, mouse, or touch input.
+			 */
 			function handleRelayedInput(type, event, data) {
 				if (window.Atari == null) { return; }
 				if (Atari.gameMediator == null) { return; }
@@ -86,7 +130,50 @@
 				user-select: none;
 			}
 		</style>
-		<link rel="stylesheet" href="{BASE_URL}testharness/css/game.css" />
+		
+		<!--
+		FONT SUPPORT: These only work when embedded directly in the page, it won't work via a .css include
+		[SB] Talk to caldwell for deets...
+		-->
+			<style type="text/css">
+			@font-face{
+			font-family:"AvantGardeGothicITCW01B 731069";
+			src:url("{BASE_URL}fonts/2a334c60-3e0d-4f43-b0e9-5284ea33961a.eot?iefix") format("eot");}
+			@font-face{
+			font-family:"AvantGardeGothicITCW01B 731069";
+			src:url("{BASE_URL}fonts/2a334c60-3e0d-4f43-b0e9-5284ea33961a.eot?iefix");
+			src:url("{BASE_URL}fonts/c68f0543-0caf-4988-b234-355520476b8c.woff") format("woff"),url("{BASE_URL}fonts/2d4f1d98-ddb3-4acc-ae78-c8b1863f780e.ttf") format("truetype"),url("{BASE_URL}fonts/80f98a03-905d-49e6-8614-cec7c32ca4f2.svg#80f98a03-905d-49e6-8614-cec7c32ca4f2") format("svg");
+			}
+
+			@font-face{
+			font-family:"AvantGardeGothicITCW01B 731072";
+			src:url("{BASE_URL}fonts/d6c308a1-6908-40bc-b732-0fec02d083ac.eot?iefix") format("eot");}
+			@font-face{
+			font-family:"AvantGardeGothicITCW01B 731072";
+			src:url("{BASE_URL}fonts/d6c308a1-6908-40bc-b732-0fec02d083ac.eot?iefix");
+			src:url("{BASE_URL}fonts/7571e8e6-97a2-48aa-97c1-b8aeeefc5409.woff") format("woff"),url("{BASE_URL}fonts/8f1e17ad-3b38-4d51-83f5-4e5469174a77.ttf") format("truetype"),url("{BASE_URL}fonts/1ee7d1fd-0f7c-4d70-b970-f4dc602eab62.svg#1ee7d1fd-0f7c-4d70-b970-f4dc602eab62") format("svg");
+			}
+
+			@font-face{
+			font-family:"AvantGardeGothicITCW01D 731075";
+			src:url("{BASE_URL}fonts/b74e5f86-4477-435a-abdf-32d8215f21bc.eot?iefix") format("eot");}
+			@font-face{
+			font-family:"AvantGardeGothicITCW01D 731075";
+			src:url("{BASE_URL}fonts/b74e5f86-4477-435a-abdf-32d8215f21bc.eot?iefix");
+			src:url("{BASE_URL}fonts/c18aee57-7585-4a8b-9a1c-69d226301d73.woff") format("woff"),url("{BASE_URL}fonts/44ccbb2b-0fbc-4d95-b1da-0aa73bd26fb0.ttf") format("truetype"),url("{BASE_URL}fonts/f2de529c-11d2-43b7-be7c-05c5aaeaf133.svg#f2de529c-11d2-43b7-be7c-05c5aaeaf133") format("svg");
+			}
+
+			@font-face{
+			font-family:"AvantGardeGothicITCW01D 731078";
+			src:url("{BASE_URL}fonts/11458aa4-54c5-4577-b6c7-03209f393c77.eot?iefix") format("eot");}
+			@font-face{
+			font-family:"AvantGardeGothicITCW01D 731078";
+			src:url("{BASE_URL}fonts/11458aa4-54c5-4577-b6c7-03209f393c77.eot?iefix");
+			src:url("{BASE_URL}fonts/4e9994cb-061f-4678-850d-527f1d636f44.woff") format("woff"),url("{BASE_URL}fonts/cb81a665-3c91-4f41-a739-dbf62a943154.ttf") format("truetype"),url("{BASE_URL}fonts/a662b8b1-1550-4c01-9eec-437f22cab36e.svg#a662b8b1-1550-4c01-9eec-437f22cab36e") format("svg");
+			}
+			</style>
+
+			<link rel="stylesheet" href="{BASE_URL}testharness/css/game.css" />
 	</head>
 
 	<body class="game" onload="init()">

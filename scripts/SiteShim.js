@@ -4,10 +4,20 @@
 	var shell = Atari.GameShell;
 	var progress = null;
 	var gameInfo = null;
-	var performanceIndex;
 
-	function quickPlay(gameId, basePath) {
+	var forceTouch = false;
+	var platform = null;
+
+	function quickPlay(gameId, basePath, p_forceTouch, p_platform) {
 		currentGame = gameId;
+		forceTouch = p_forceTouch;
+		platform = null;
+		if (p_platform != "") { platform = p_platform; }
+
+		progress = document.getElementById("progress");
+		progress.innerHTML = "Loading Game Manifest...";
+		progress.style.display = "block";
+
 		// Initialize is mandatory now.
 		shell.onManifestLoaded = handleManifestLoaded;
 		shell.initialize(basePath);
@@ -17,9 +27,8 @@
 		// It is safe to show an arcade layout here.
 		shell.onGameSetup = handleGameSetup;
 		shell.setupGame(currentGame);
-		progress = document.getElementById("progress");
 		progress.style.display = "auto";
-		progress.innerHTML = "Waiting...";
+		progress.innerHTML = "Setting Up Game...";
 	}
 
 	// Game manifest (and possibly start screen assets) are loaded.
@@ -28,13 +37,14 @@
 		shell.onGameReady = handleGameReady;
 		shell.onPlayersChanged = handlePlayersChanged;
 
+		progress.innerHTML = "Loading Game..."
+
 		// All games also provide progress. It is important to check progress even on multiplayer games.
 		shell.onGameProgress = handleProgress;
 
+		// Create the game.
 		shell.createGame(document.body);
-		//var parent = document.getElementById('games');
-		//$(parent).fadeOut(500, function () {  shell.createGame(document.getElementById('games')); });
-
+		if (platform != null) { document.getElementById("gameFrame").className = "mobile"; }
 
 		setTimeout(function() {
 			$(parent).fadeIn(750);
@@ -50,28 +60,24 @@
 		var mode = GameLibs.GameInfo.SINGLE_PLAYER;
 		var manifest = shell.currentGameManifest;
 
-		//Prompt user to start a multiplayer game
+		// Prompt user to start a multiplayer game
 		var mp = manifest.multiplayer;
-		if (mp) {
+		if (mp && platform == null) {
 			if (confirm("Play Multiplayer?")) {
 				mode = GameLibs.GameInfo.MULTI_PLAYER;
 			}
 		}
-		//If we're not in multiplayer, inject 1 player into the GameInfo
+		// If we're not in multiplayer, inject 1 player into the GameInfo
 		if(mode == GameLibs.GameInfo.SINGLE_PLAYER){
 			var players = [new GameLibs.Player("Player 1", "sp")];
 		}
 
-		//Initialize GameInfo class
-		gameInfo = new GameLibs.GameInfo(manifest.id, mode, roomName, players, mp, manifest.modes);
+		// Initialize GameInfo class
+		gameInfo = new GameLibs.GameInfo(manifest.id, mode, roomName, players, mp, manifest.modes, platform, 1024, 622);
 		Atari.trace("Joining room: " + roomName);
 
-		//[SB] Check whether touch support is enabled and inject into gameInfo
-		if('ontouchstart' in document.documentElement || (window.navigator && window.navigator.msMaxTouchPoints > 0)){
-			gameInfo.touchEnabled = true;
-		}
-		var check = document.getElementById("forceTouch");
-		if (check && check.checked) {
+		// Check whether touch support is enabled and inject into gameInfo
+		if(forceTouch || 'ontouchstart' in document.documentElement || (window.navigator && window.navigator.msMaxTouchPoints > 0)){
 			gameInfo.touchEnabled = true;
 		}
 
@@ -83,7 +89,7 @@
 			var mpg = new GameLibs.MultiPlayerGame(gameInfo);
 		}
 
-		//Pass both mpg and gameInfo to the shell to initialize the game.
+		// Pass both mpg and gameInfo to the shell to initialize the game.
 		shell.initializeGame(gameInfo, mpg);
 
 		// Multiplayer games return a room which is connected to the socket. It will provide
@@ -93,6 +99,7 @@
 			mpg.onTimeout = handleTimeout;
 			mpg.onGameReady = startGame;
 			mpg.onPlayersChanged = handlePlayersChanged;
+			mpg.onPlayerLeave = handlePlayerLeave;
 			mpg.onConnectionSuccess = handleConnectionSuccess;
 			mpg.onGameCanceled = handleGameCancelled;
 
@@ -105,7 +112,8 @@
 	// The game is ready to play. Either call startGame(), or show a button that does it.
 	function startGame() {
 		// Set the selected mode!
-		if (gameInfo.gameModes != null) {
+		// Note: No mode is set for mobile.
+		if (gameInfo.gameModes != null && platform == null) {
 			var msg = "Choose a game mode:";
 			var modes = gameInfo.gameModes;
 			for(var i = 0, l = modes.length; i < l; i++) {
@@ -153,10 +161,15 @@
 		progress.innerHTML += "<br />[Multiplayer] Player Joined! There are now "+ roster.length +" people in the room.";
 	}
 
+	// Players left the room, either during the pre-game, or during the game.
+	function handlePlayerLeave(playerId) {
+		shell.removePlayer(playerId);
+	}
+
 	// Players left or joined the room, either during the pre-game, or during the game.
-		function handleConnectionSuccess(roster) {
-			progress.innerHTML += "<br />[Multiplayer] Connected to server...";
-		}
+	function handleConnectionSuccess(roster) {
+		progress.innerHTML += "<br />[Multiplayer] Connected to server...";
+	}
 
     // The game was canceled because not enough players are present. This will only happen in-game when players leave.
     function handleGameCancelled(roster) {

@@ -1,3 +1,14 @@
-Version 0.1.0 [August 30, 2012]
+Version 1.1.0 [October 31, 2012]
+----------------------------------------------------------
+SDK Update for developers to submit games
+* General modifications and updates to the SDK
+* SDK hooks for mobile and responsive design support
+* Improvements to the test harness to automatically list games
+* Addition of mobile simulator options in the test harness
+* Provision of developer design templates
+* First draft of a game submission guide
+
+
+Version 1.0.0 [August 30, 2012]
 ----------------------------------------------------------
 Initial library release!
