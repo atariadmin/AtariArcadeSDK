@@ -1,25 +1,24 @@
 {
-	"myGame": {
-		"id": "mygame",
-		"name": "MyGame",
-		"base": "games/MyGame/",
+	"fallingstuff": {
+		"id": "fallingstuff",
+		"name": "Falling Stuff",
+		"base": "games/FallingStuff/",
 		"bgImage": "arcadeArt/background.jpg",
 		"instructions": [
 			{
 				"touch": {
-						"image": "arcadeArt/control-shoot-touch.jpg",
-						"icon": "icon-control-press",
-						"description": "Tap the 'shoot' button to shoot."
+						"image": "arcadeArt/control-paddleMove-touch.jpg",
+						"icon": "icon-control-drag-hor",
+						"description": "Use the joystick to control the paddle."
 				},
 				"desktop": {
-						"image": "arcadeArt/control-shoot-desktop.jpg",
-						"icon": "icon-control-spacebar",
-						"description": "Press the 'spacebar' to shoot."
+						"image": "arcadeArt/control-paddleMove-desktop.jpg",
+						"icon": "icon-control-ws-key",
+						"description": "Use arrows to W/S to control the paddle."
 				}
-			},
-
+			}
 			
 		],
-		"copyright":"MyGame &reg; &copy; 2012 Your company, inc."
-	},
+		"copyright":"Falling Stuff &reg; &copy; 2012 gskinner.com, inc."
+	}
 }

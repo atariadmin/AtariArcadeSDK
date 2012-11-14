@@ -1,0 +1,26 @@
+{
+	"splash":   "arcadeArt/background.jpg",
+	"titleArt": "arcadeArt/gameTitle.png",
+
+    "id":       "fallingstuff",
+    "name":     "Falling Stuff",
+    "gameClass": "FallingStuff.js",
+
+	"modes": [
+		{"id":"beginner", "label":"Beginner", "src":"arcadeArt/sp-mode-01.jpg"},
+		{"id":"intermediate", "label":"Intermediate", "src":"arcadeArt/sp-mode-02.jpg"},
+		{"id":"expert", "label":"Expert", "src":"arcadeArt/sp-mode-03.jpg"}
+	],
+
+	"dependencies":   [
+		"scripts/FallingStuff.js"
+	],
+
+	"deployDependencies": [
+		"scripts/fallingstuff-min.js"
+	],
+
+	"assets": [
+		{"id":"background", "src":"images/background.jpg"}
+	]
+}
